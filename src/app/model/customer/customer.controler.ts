@@ -11,7 +11,26 @@ const createCustomer = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getAllcustomer = catchAsync(async (req, res) => {
+  const customer = await customerService.getAllCustomer();
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: 'all customer retive successfully !!',
+    data: customer,
+  });
+});
+const getSingleCustomer = catchAsync(async (req, res) => {
+  const phoneNumber = req.body.phoneNumber;
+  const customer = await customerService.getSingleCustomer(phoneNumber);
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: 'customer retive successfully !!',
+    data: customer,
+  });
+});
 
 export const customerContoler = {
   createCustomer,
+  getSingleCustomer,
+  getAllcustomer,
 };

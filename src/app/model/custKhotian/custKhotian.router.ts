@@ -4,7 +4,7 @@ import { customerKhotianControler } from './custKhotian.crontroler';
 
 const router = Router();
 
-router.post('/crate-debit', customerKhotianControler.createDebit);
+router.post('/create-debit', customerKhotianControler.createDebit);
 router.post('/create-credit', customerKhotianControler.createCradit);
 router.get('/due-customer', customerKhotianControler.deuCustomer);
 

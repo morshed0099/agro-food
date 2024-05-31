@@ -2,29 +2,55 @@ import httpStatus from 'http-status';
 import AppError from '../../midleware/AppError';
 import { TCustKhotian } from './custKhotian.interface';
 import { CustKhotian } from './custKhotian.model';
+import { Customer } from '../customer/customer.model';
 
 const createDebit = async (payload: Partial<TCustKhotian>) => {
-  const customer = await CustKhotian.findOne({
-    customerId: payload.customerId,
-  });
+  const customer = await Customer.findById(payload.customerId);
+
   if (!customer) {
     throw new AppError(httpStatus.NOT_FOUND, 'customer accaount not forund');
   }
-  customer.total = customer.total + (payload?.debit as number);
-  const result = await CustKhotian.create(payload);
-  return result;
+
+  const match = await CustKhotian.findOne({ customerId: customer._id });
+  let debitData = {
+    date: payload.date,
+    debit: payload.debit,
+    total: payload.debit,
+    customerId: payload.customerId,
+  };
+  console.log(debitData);
+  if (match) {
+    const finalTotal = (match.total = match.total + (payload?.debit as number));
+    debitData.total = finalTotal;
+  }
+  const result = await CustKhotian.create(debitData);
+  const finalResut = await CustKhotian.find({
+    customerId: customer._id,
+  }).populate('customerId');
+  return finalResut;
 };
 
 const createCaredit = async (payload: Partial<TCustKhotian>) => {
-  const customer = await CustKhotian.findOne({
-    customerId: payload.customerId,
-  });
+  const customer = await Customer.findById(payload.customerId);
   if (!customer) {
     throw new AppError(httpStatus.NOT_FOUND, 'customer accaount not forund');
   }
-  customer.total = customer.total - (payload?.credit as number);
-  const result = await CustKhotian.create(payload);
-  return result;
+  const match = await CustKhotian.findOne({ customerId: customer._id });
+  let creadit = {
+    date: payload.date,
+    credit: payload.credit,
+    total: payload.credit,
+    customerId: payload.customerId,
+  };
+  if (match) {
+    const finalTotal = match.total - (payload?.credit as number);
+    creadit.total = finalTotal;
+  }
+  const result = await CustKhotian.create(creadit);
+  const finalResut = await CustKhotian.find({
+    customerId: customer._id,
+  }).populate('customerId');
+  return finalResut;
 };
 const duePaymentCustomer = async () => {
   const result = await CustKhotian.find({ total: { $lt: 0 } }).populate(

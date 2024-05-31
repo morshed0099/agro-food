@@ -9,5 +9,7 @@ router.post(
   valodate(customerValidation.createCustomerSchema),
   customerContoler.createCustomer,
 );
+router.get('/', customerContoler.getAllcustomer);
+router.get('/phonenumber', customerContoler.getSingleCustomer);
 
 export const customerRouter = router;
