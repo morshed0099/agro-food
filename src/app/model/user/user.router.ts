@@ -10,6 +10,7 @@ router.post(
   valodate(userValidation.createUserValidation),
   userControler.createUser,
 );
+router.post('/login')
 
 
 export const userRouter= router

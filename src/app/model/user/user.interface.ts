@@ -4,7 +4,7 @@ export type TUser = {
   name: string;
   email: string;
   password: string;
-  photo: string;
+  photo?: string;
 };
 
 export interface userModel extends TUser {

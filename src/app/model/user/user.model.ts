@@ -21,6 +21,7 @@ const userSchema = new Schema<TUser>(
       type: String,
       required: [true, 'password is required'],
       minlength: [4, 'password not will be less than 4 carecter'],
+      select: 0,
     },
   },
   {
