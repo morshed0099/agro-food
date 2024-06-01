@@ -11,14 +11,16 @@ const createDebit = async (payload: Partial<TCustKhotian>) => {
     throw new AppError(httpStatus.NOT_FOUND, 'customer accaount not forund');
   }
 
-  const match = await CustKhotian.findOne({ customerId: customer._id });
+  const match = await CustKhotian.findOne({ customerId: customer._id }).sort(
+    '-createdAt',
+  );
   let debitData = {
     date: payload.date,
     debit: payload.debit,
     total: payload.debit,
     customerId: payload.customerId,
   };
-  console.log(debitData);
+
   if (match) {
     const finalTotal = (match.total = match.total + (payload?.debit as number));
     debitData.total = finalTotal;
@@ -35,7 +37,9 @@ const createCaredit = async (payload: Partial<TCustKhotian>) => {
   if (!customer) {
     throw new AppError(httpStatus.NOT_FOUND, 'customer accaount not forund');
   }
-  const match = await CustKhotian.findOne({ customerId: customer._id });
+  const match = await CustKhotian.findOne({ customerId: customer._id }).sort(
+    '-createdAt',
+  );
   let creadit = {
     date: payload.date,
     credit: payload.credit,
@@ -43,8 +47,10 @@ const createCaredit = async (payload: Partial<TCustKhotian>) => {
     customerId: payload.customerId,
   };
   if (match) {
+    console.log(match)
     const finalTotal = match.total - (payload?.credit as number);
     creadit.total = finalTotal;
+    console.log(creadit)
   }
   const result = await CustKhotian.create(creadit);
   const finalResut = await CustKhotian.find({

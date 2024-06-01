@@ -7,6 +7,7 @@ import { dailyEarnRouter } from '../model/dailyEarn/dailyEarn.router';
 import { customerRouter } from '../model/customer/customer.router';
 import { customerKhotianRouter } from '../model/custKhotian/custKhotian.router';
 import { dailyTotalRouter } from '../model/dayTotal/dayTotal.router';
+import { riceStockRouter } from '../model/riceStock/riceStock.router';
 
 const router = Router();
 
@@ -42,6 +43,10 @@ const moduleRouter = [
   {
     path: '/dailytotal',
     route: dailyTotalRouter,
+  },
+  {
+    path: '/ricestock',
+    route: riceStockRouter,
   },
 ];
 
