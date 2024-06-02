@@ -1,7 +1,11 @@
 import { useState } from "react";
 
 const CustomerCredit = () => {
-  const [customer, setCustomer] = useState('');
+  const [customer, setCustomer] = useState([{
+    name:"ali",
+    address:"dhaka",
+    phoneNumber:"01787452366"
+  }]);
   const [open, setOpen] = useState(false);
 
   const handelSubmit = (e) => {

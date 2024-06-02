@@ -9,6 +9,8 @@ import CreateUser from "../pages/CreateUser";
 import DayEarn from "../pages/DayEarn";
 import CategoryCreate from "../pages/CategoryCreate";
 import DayCost from "../pages/DayCost";
+import CreateRiceStock from "../pages/CreateRiceStock";
+import CreateReduceRicestoce from "../pages/CreateReduceRicestoce";
 
 export const router = createBrowserRouter([
   {
@@ -50,6 +52,14 @@ export const router = createBrowserRouter([
       {
         path: "/create-category",
         element: <CategoryCreate />,
+      },
+      {
+        path: "/create-rice-stock",
+        element: <CreateRiceStock />,
+      },
+      {
+        path: "/create-rice-stock-reduce",
+        element: <CreateReduceRicestoce />,
       },
     ],
   },
