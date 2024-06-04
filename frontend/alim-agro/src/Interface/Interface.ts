@@ -6,3 +6,8 @@ export type TloginError={
         errorMessage:string
     }
 }
+
+export type TCategory={
+    _id:string,
+    name:string
+  }

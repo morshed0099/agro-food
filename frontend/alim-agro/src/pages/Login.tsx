@@ -35,7 +35,7 @@ const Login = () => {
       }
     } catch (error: unknown) {
       const loginError = error as TloginError;
-      toast.error(loginError.data.errorMessage);
+      toast.error(loginError.data.message || loginError.data.errorMessage);
       setLoading(false);
     }
   };

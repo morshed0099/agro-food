@@ -1,4 +1,8 @@
+import { TCategory } from "../Interface/Interface";
 import { useGetAllCategoryQuery } from "../redux/feature/Category/CategoryApi";
+
+
+
 
 const CreateReduceRicestoce = () => {
   const { data } = useGetAllCategoryQuery(undefined);
@@ -14,7 +18,7 @@ const CreateReduceRicestoce = () => {
         >
           কাট্যগরি সেট করুন
         </option>
-        {data?.data.map((da) => (
+        {data?.data.map((da:TCategory) => (
           <option value={da?.name}>{da?.name}</option>
         ))}
       </select>

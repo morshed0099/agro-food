@@ -1,21 +1,54 @@
-import { useGetSingleCustomerMutation } from "../redux/feature/Customer/CustomerApi";
+import { useState } from "react";
+import {
+  useCreateCreaditMutation,
+  useGetSingleCustomerMutation,
+} from "../redux/feature/Customer/CustomerApi";
+import toast from "react-hot-toast";
+import { TloginError } from "../Interface/Interface";
 
 const CustomerCredit = () => {
   const [customer, { data }] = useGetSingleCustomerMutation();
+  const [creaditCreate] = useCreateCreaditMutation();
+  const [loader, setLoader] = useState(false);
+  const [loader1, setLoader1] = useState(false);
 
-  const handelSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("hoo");
-  };
-  const customerFind =async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const phoneNumber = e.currentTarget.phoneNumber.value;
-    const phoneNumberInfo={
-      phoneNumber
+  const handelSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    try {
+      setLoader1(true);
+      e.preventDefault();
+      const form = e.currentTarget;
+      const date = form.date.value;
+      const credit = form.creadit.value;
+      const creaditInfo = {
+        date,
+        customerId: data?.data?._id,
+        credit,
+      };
+      const res = await creaditCreate(creaditInfo).unwrap();
+      toast.success(res.message), setLoader1(false);
+      form.reset();
+    } catch (error) {
+      const finalError = error as TloginError;
+      toast.error(finalError.data.message || finalError.data.errorMessage);
+      setLoader1(false);
     }
-   const res= await customer(phoneNumberInfo).unwrap();
-    console.log(res)
-  
+  };
+  const customerFind = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoader(true);
+    try {
+      e.preventDefault();
+      const phoneNumber = e.currentTarget.phoneNumber.value;
+      const phoneNumberInfo = {
+        phoneNumber,
+      };
+      const res = await customer(phoneNumberInfo).unwrap();
+      console.log(res);
+      setLoader(false);
+    } catch (error) {
+      const finalError = error as TloginError;
+      toast.error(finalError.data.message || finalError.data.errorMessage);
+      setLoader(false);
+    }
   };
 
   return (
@@ -33,7 +66,7 @@ const CustomerCredit = () => {
           />
           <div>
             <button className="mt-6 py-2 px-10 border w-[400px] rounded-2xl bg-gray-600 text-white text-2xl">
-              খুজুন
+              {loader ? "অপেক্ষা করুন" : "খুজুন"}
             </button>
           </div>
         </form>
@@ -70,21 +103,21 @@ const CustomerCredit = () => {
             <form onSubmit={handelSubmit}>
               <p className="mb-2">পেমেন্ট এমাউন্ট দিন</p>
               <input
-                type="text"
-                name="amount"
+                type="date"
+                name="date"
                 placeholder="টাকার পরিমান দিন"
                 className="w-[400px]  outline-none border-b-4 border-red-900 "
               />
               <p className="mb-2 mt-4">পেমেন্ট এমাউন্ট দিন</p>
               <input
-                type="date"
-                name="amount"
+                type="number"
+                name="creadit"
                 placeholder="টাকার পরিমান দিন"
                 className="w-[400px]  outline-none border-b-4 border-red-900 "
               />
               <div>
                 <button className="mt-6 py-2 px-10 border w-[400px] rounded-2xl bg-gray-600 text-white text-2xl">
-                  পেমেন্ট
+                  {loader1 ? "অপেক্ষা করুন" : " পেমেন্ট"}
                 </button>
               </div>
             </form>

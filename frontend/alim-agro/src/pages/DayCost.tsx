@@ -1,19 +1,61 @@
+import { useState } from "react";
+import { useCreateDailyCostMutation } from "../redux/feature/DailyCost/DaIlyCostApi";
+import toast from "react-hot-toast";
+import { TloginError } from "../Interface/Interface";
+
 const DayCost = () => {
-    return (
-      <div className="flex flex-col gap-4 w-[75%] mx-auto h-[75%] my-auto">
-        <p>তারিখ সেট করুন</p>
-        <input type="date" name="" className="border-b-4 border-red-900 outline-none w-full" />
-        <p>বিবরণ সেট করুন</p>
-        <input type="text" name="" className="border-b-4 border-red-900 outline-none w-full" />
-        <p>এমাউন্ট দিন</p>
-        <input type="number" name="" className="border-b-4 border-red-900 outline-none w-full" />
-        <button     
-          className="mt-6 py-2 px-10 border w-[400px] rounded-2xl bg-gray-600 text-white text-2xl"
-        >
-         দৈনিক ব্যায় যোগ করুন
-        </button>
-      </div>
-    );
+  const [loader, setLoader] = useState(false);
+  const [cost] = useCreateDailyCostMutation();
+  const handelSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoader(true);
+    try {
+      const form = e.currentTarget;
+      const date = form.date.value;
+      const amount = Number(form.amount.value);
+      const description = form.description.value;
+      const dailyCost = {
+        date,
+        description,
+        amount,
+      };
+      const res = await cost(dailyCost).unwrap();
+      toast.success(res.message);
+      setLoader(false);
+      form.reset()
+    } catch (error) {
+      const finalError = error as TloginError;
+      toast.error(finalError.data.errorMessage || finalError.data.message);
+      setLoader(false);
+    }
   };
-  
-  export default DayCost;
+  return (
+    <div className="w-[75%] mx-auto h-[75%] my-auto">
+      <form onSubmit={handelSubmit} className="flex flex-col gap-4">
+        <p>তারিখ সেট করুন</p>
+        <input
+          type="date"
+          name="date"
+          className="border-b-4 border-red-900 outline-none w-full"
+        />
+        <p>বিবরণ সেট করুন</p>
+        <input
+          type="text"
+          name="description"
+          className="border-b-4 border-red-900 outline-none w-full"
+        />
+        <p>এমাউন্ট দিন</p>
+        <input
+          type="number"
+          name="amount"
+          className="border-b-4 border-red-900 outline-none w-full"
+        />
+        <button className="mt-6 py-2 px-10 border w-[400px] rounded-2xl bg-gray-600 text-white text-2xl">
+          {loader ? "অপেক্ষা করুন" : "  দৈনিক ব্যায় যোগ করুন"}
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default DayCost;

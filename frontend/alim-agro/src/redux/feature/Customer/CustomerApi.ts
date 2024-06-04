@@ -15,8 +15,26 @@ const customerApi = baseApi.injectEndpoints({
         body: phoneNumber,
       }),
     }),
+    createDebit: builder.mutation({
+      query: (debitInfo) => ({
+        url: "/custkhotian/create-debit",
+        method: "POST",
+        body: debitInfo,
+      }),
+    }),
+    createCreadit: builder.mutation({
+      query: (creaditInfo) => ({
+        url: "/custkhotian/create-credit",
+        method: "POST",
+        body: creaditInfo,
+      }),
+    }),
   }),
 });
 
-export const { useCreateCustomerMutation, useGetSingleCustomerMutation } =
-  customerApi;
+export const {
+  useCreateCustomerMutation,
+  useGetSingleCustomerMutation,
+  useCreateDebitMutation,
+  useCreateCreaditMutation
+} = customerApi;
