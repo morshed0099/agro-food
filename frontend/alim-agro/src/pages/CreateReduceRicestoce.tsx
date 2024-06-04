@@ -1,15 +1,22 @@
+import { useGetAllCategoryQuery } from "../redux/feature/Category/CategoryApi";
+
 const CreateReduceRicestoce = () => {
+  const { data } = useGetAllCategoryQuery(undefined);
+
   return (
     <div className="flex flex-col gap-4 w-[75%] mx-auto h-[75%] my-auto">
-      <select name="" id="">
+      <select className="py-2 px-4 border-2 border-red-900 rounded-2xl"  name="" id="">
         <option
           selected
-          className="py-2 px-4 border-2 border-red-900 rounded-2xl"
+          className=""
           value=""
           disabled
         >
           কাট্যগরি সেট করুন
         </option>
+        {data?.data.map((da) => (
+          <option value={da?.name}>{da?.name}</option>
+        ))}
       </select>
       <p>কত বস্তা বিয়োগ করবেন তা দিন</p>
       <input

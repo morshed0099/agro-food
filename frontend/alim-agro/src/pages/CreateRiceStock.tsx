@@ -1,10 +1,20 @@
+import { useGetAllCategoryQuery } from "../redux/feature/Category/CategoryApi";
+
 const CreateRiceStock = () => {
+  const { data } = useGetAllCategoryQuery(undefined);
   return (
     <div className="flex flex-col gap-4 w-[75%] mx-auto h-[75%] my-auto">
-      <select name="" id="">
-        <option selected  className="py-2 px-4 border-2 border-red-900 rounded-2xl" value="" disabled>
+      <select name=""   className="py-2 px-4 border-2 border-red-900 rounded-2xl" id="">
+        <option
+          selected        
+          value=""
+          disabled
+        >
           কাট্যগরি সেট করুন
         </option>
+        {data?.data.map((da) => (
+          <option value={da?.name}>{da?.name}</option>
+        ))}
       </select>
       <p>কত বস্তা যোগ করবেন তা দিন</p>
       <input

@@ -3,32 +3,41 @@ import { useLoginMutation } from "../redux/feature/Auth/AuthApi";
 import { setUser } from "../redux/feature/Auth/AuthSlice";
 import { useAppDispatch } from "../redux/hooks";
 import { useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import toast from "react-hot-toast";
+import { TloginError } from "../Interface/Interface";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
-  const [login,{isError,error,isLoading}] = useLoginMutation();
+  const [login] = useLoginMutation();
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const handelSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
-    e.preventDefault();   
-    const form = e.currentTarget;
-    const email = form.email.value;
-    const password = form.password.value;
-    const userInfo = {
-      email,
-      password,
-    };
-    const res = await login(userInfo).unwrap();    
-    dispatch(setUser({ token: res.data.token, user: {} }));
-    setLoading(false);
-    form.reset();
-    console.log(ResizeObserver);
-    if (res.data.token) {
-      navigate("/");
-      setLoading(false);    
+    try {
+      e.preventDefault();
+      const form = e.currentTarget;
+      const email = form.email.value;
+      const password = form.password.value;
+      const userInfo = {
+        email,
+        password,
+      };
+      const res = await login(userInfo).unwrap();
+      const user = jwtDecode(res.data.token);
+      dispatch(setUser({ token: res.data.token, user: user }));
+      if (res.data.token) {
+        toast.success(res.message);
+        navigate("/");
+        form.reset();
+        setLoading(false);
+      }
+    } catch (error: unknown) {
+      const loginError = error as TloginError;
+      toast.error(loginError.data.errorMessage);
+      setLoading(false);
     }
-  
   };
 
   return (
